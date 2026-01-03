@@ -33,7 +33,7 @@ class PgSqlDatabase extends Database
             $queryCache = new PhpFilesAdapter('foamycastle-query-cache');
             $metadataCache = new PhpFilesAdapter('foamycastle-metadata-cache');
         }
-        $this->config = new Configuration();
+        $this->config = ORMSetup::createAttributeMetadataConfiguration([], $devMode);
         $this->config->setMetadataCache($metadataCache);
         $pathsToEntities = array_values([env('ENTITY', '')]);
         $implementation = new AttributeDriver($pathsToEntities);
@@ -42,9 +42,9 @@ class PgSqlDatabase extends Database
 
         if(PHP_VERSION_ID >= 80400){
             $this->config->enableNativeLazyObjects(true);
-            $this->config->setProxyDir('proxy');
+            //$this->config->setProxyDir('proxy');
         }else{
-            $this->config->setProxyDir('proxy');
+            //$this->config->setProxyDir('proxy');
             $this->config->setProxyNamespace('DoctrineDynamicProxy');
             if($devMode){
                 $this->config->setAutoGenerateProxyClasses(true);
@@ -52,8 +52,6 @@ class PgSqlDatabase extends Database
                 $this->config->setAutoGenerateProxyClasses(false);
             }
         }
-
-        $this->config = ORMSetup::createAttributeMetadataConfiguration($pathsToEntities, $devMode);
         $this->connection = DriverManager::getConnection($this->params, $this->config);
         $this->entityManager = new EntityManager($this->connection, $this->config);
     }
