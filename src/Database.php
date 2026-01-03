@@ -29,7 +29,7 @@ abstract class Database
      * @param class-string<T> $class
      * @return null|object<T>
      */
-    public function getRepo(string $class): ?object
+    public function get(string $class): ?object
     {
         return $this->entityManager->getRepository($class);
     }
